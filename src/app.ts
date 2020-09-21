@@ -103,7 +103,7 @@ import Webserver from "./webserver";
 			submission
 				.reply(response.join("\n"))
 				.then((reply) => reply)
-				.then((reply) => reply.sticky());
+				.then((reply) => reply.distinguish({ sticky: true }));
 		});
 	});
 
