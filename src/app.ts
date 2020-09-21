@@ -102,7 +102,7 @@ import Webserver from "./webserver";
 
 			submission
 				.reply(response.join("\n"))
-				.then((reply) => reply.fetch())
+				.then((reply) => reply)
 				.then((reply) => reply.sticky());
 		});
 	});
