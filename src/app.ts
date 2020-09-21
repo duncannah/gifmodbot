@@ -100,7 +100,10 @@ import Webserver from "./webserver";
 
 			response.push(`*^(I'm a bot, this action was performed automatically.)*`);
 
-			submission.reply(response.join("\n"));
+			submission
+				.reply(response.join("\n"))
+				.then((reply) => reply.fetch())
+				.then((reply) => reply.sticky());
 		});
 	});
 
