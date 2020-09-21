@@ -24,4 +24,4 @@ export const subreddits =
 
 // BOT CONSTANTS
 
-export const garbageCollectionInterval = 1000 * 60 * 60 * 1;
+export const garbageCollectionInterval = 1000 * 60 * 60 * 0.25; // 15 mins
