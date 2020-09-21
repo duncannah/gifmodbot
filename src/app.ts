@@ -40,11 +40,14 @@ import Webserver from "./webserver";
 			if ((await submission.created_utc) * 1000 + 1000 * 60 * 60 * 24 * 7 < Date.now()) return;
 
 			// check if bot posted before
-
 			if (
-				(await submission.comments.fetchAll({ amount: 100, skipReplies: true })).find(
-					(c) => c.author.id === client.getMe().id // && c.stickied
-				)
+				(
+					await Promise.allSettled(
+						await submission.comments.fetchAll({ amount: 100, skipReplies: true }).map(async (s) => {
+							return (await s.author.id) === (await client.getMe().id);
+						})
+					)
+				).some((r) => (r.status === "fulfilled" ? r.value : false))
 			)
 				return;
 
