@@ -43,10 +43,10 @@ import Webserver from "./webserver";
 
 			if (
 				(await submission.comments.fetchAll({ amount: 100, skipReplies: true })).find(
-					(c) => c.author.id === client.getMe().id && c.stickied
+					(c) => c.author.id === client.getMe().id // && c.stickied
 				)
 			)
-				return console.log("posted");
+				return;
 
 			let downloadableTypes = [];
 
