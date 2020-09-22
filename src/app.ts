@@ -36,6 +36,8 @@ import Webserver from "./webserver";
 		stream.on("item", async (submission: snoowrap.Submission) => {
 			if (await submission.is_self) return;
 
+			// TODO: local cache for keeping an eye on items already replied for less network usage
+
 			// check if the post is actually recent (because this returns all posts within a month)
 			if ((await submission.created_utc) * 1000 + 1000 * 60 * 60 * 24 * 7 < Date.now()) return;
 
