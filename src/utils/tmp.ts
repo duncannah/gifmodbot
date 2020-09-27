@@ -18,7 +18,7 @@ export class GarbageCollector {
 							.stat(path.join(os.tmpdir(), "gifmodbot", file))
 							.then((stats) =>
 								stats.mtimeMs <= Date.now() - garbageCollectionInterval
-									? fse.remove(file)
+									? fse.remove(path.join(os.tmpdir(), "gifmodbot", file))
 									: Promise.resolve()
 							)
 					)
