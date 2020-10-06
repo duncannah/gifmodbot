@@ -31,15 +31,23 @@ import Webserver from "./webserver";
 
 		subsWatchedCount++;
 
+		const checkedSubmissions: string[] = [];
+
 		const stream = new SubmissionStream(client, { subreddit, limit: 10, pollTime: 10000 });
 
 		stream.on("item", async (submission: snoowrap.Submission) => {
-			if (await submission.is_self) return;
+			if ((await submission.id) in checkedSubmissions) return;
 
-			// TODO: local cache for keeping an eye on items already replied for less network usage
+			if (await submission.is_self) {
+				checkedSubmissions.push(await submission.id);
+				return;
+			}
 
 			// check if the post is actually recent (because this returns all posts within a month)
-			if ((await submission.created_utc) * 1000 + 1000 * 60 * 60 * 24 * 7 < Date.now()) return;
+			if ((await submission.created_utc) * 1000 + 1000 * 60 * 60 * 24 * 7 < Date.now()) {
+				checkedSubmissions.push(await submission.id);
+				return;
+			}
 
 			// check if bot posted before
 			if (
@@ -50,8 +58,10 @@ import Webserver from "./webserver";
 						})
 					)
 				).some((r) => (r.status === "fulfilled" ? r.value : false))
-			)
+			) {
+				checkedSubmissions.push(await submission.id);
 				return;
+			}
 
 			let downloadableTypes = [];
 
@@ -65,8 +75,8 @@ import Webserver from "./webserver";
 			else {
 				// report the post
 				submission.report({ reason: "Possible non-GIF post" });
+				checkedSubmissions.push(await submission.id);
 				return;
-				//console.log("non-GIF post: " + submission.id);
 			}
 
 			/*
@@ -109,6 +119,8 @@ import Webserver from "./webserver";
 				.reply(response.join("\n"))
 				.then((reply) => reply)
 				.then((reply) => reply.distinguish({ sticky: true }));
+
+			checkedSubmissions.push(await submission.id);
 		});
 	});
 
