@@ -43,8 +43,6 @@ const download = (handler: Handler, submission: snoowrap.Submission, type: strin
 		else return result.path;
 	});
 
-// TODO: split framing and redirecting to different jobcollectors
-
 router.get("/:post(\\w{6,8})/:service", (req, res) => {
 	if (!Object.keys(sauceServices).includes(req.params.service))
 		return res.status(503).send(errorPage("Unknown service"));
